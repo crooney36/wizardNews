@@ -8,16 +8,80 @@ app.get("/", (req, res) => {
   const html = `<!DOCTYPE html>
   <html>
   <head>
+    <title>Wizard News</title>
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-  <ul>
-  ${posts.map((post) => `<li>${post.title}</li>`)}
-  </ul>
+    <div class="news-list">
+      <header><img src="/logo.png"/>Wizard News</header>
+      ${posts.map(post => `
+        <div class='news-item'>
+          <p>
+            <span class="news-position">${post.id}. ▲</span>
+            <a href="/posts/${post.id}">${post.title}</a>
+            <small>(by ${post.name})</small>
+          </p>
+          <small class="news-info">
+            ${post.upvotes} upvotes | ${post.date}
+          </small>
+        </div>`
+      ).join('')}
+    </div>
   </body>
-  </html>
-  `;
+</html>`
   res.send(html);
 });
+
+//single post view:
+app.get('/posts/:id', (req,res, next) => {
+  const id = req.params.id;
+  const post = postBank.find(id);
+
+  if(!post.id){
+    const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Wizard News</title>
+      <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+      <header><img src="/logo.png"/>Wizard News</header>
+      <div class="not-found">
+        <p>404: Page Not Found</p>
+      </div>
+    </body>
+    </html>
+    `;
+
+    res.send(html)
+  }else{
+    res.send(`<!DOCTYPE html>
+  <html>
+  <head>
+    <title>Wizard News</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="news-list">
+      <header><img src="/logo.png"/>Wizard News</header>
+     
+        <div class='news-item'>
+          <p>
+            <span class="news-position">${post.id}. ▲</span>
+            ${post.title}
+            <small>(by ${post.name})</small>
+          </p>
+          <small class="news-info">
+            ${post.upvotes} upvotes | ${post.date}
+          </small>
+          <p>${post.content}</p>
+        </div>
+    </div>
+  </body>
+</html>`)
+  }
+})
 
 const PORT = 1337;
 app.use(morgan("dev"));
