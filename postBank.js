@@ -136,4 +136,6 @@ const find = (id) => {
   return { ...post }; // Again, we copy the post data before returning so the original information is safe.
 };
 
-module.exports = { list: list, find: find };
+module.exports = { 
+  list: list, 
+  find: find };
