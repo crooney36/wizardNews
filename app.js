@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const postBank = require("./postBank");
+const timeAgo = require("node-time-ago");
 
 app.get("/", (req, res) => {
   const posts = postBank.list();
@@ -14,7 +15,9 @@ app.get("/", (req, res) => {
   <body>
     <div class="news-list">
       <header><img src="/logo.png"/>Wizard News</header>
-      ${posts.map(post => `
+      ${posts
+        .map(
+          (post) => `
         <div class='news-item'>
           <p>
             <span class="news-position">${post.id}. ▲</span>
@@ -22,22 +25,23 @@ app.get("/", (req, res) => {
             <small>(by ${post.name})</small>
           </p>
           <small class="news-info">
-            ${post.upvotes} upvotes | ${post.date}
+            ${post.upvotes} upvotes | ${timeAgo(post.date)}
           </small>
         </div>`
-      ).join('')}
+        )
+        .join("")}
     </div>
   </body>
-</html>`
+</html>`;
   res.send(html);
 });
 
 //single post view:
-app.get('/posts/:id', (req,res, next) => {
+app.get("/posts/:id", (req, res, next) => {
   const id = req.params.id;
   const post = postBank.find(id);
 
-  if(!post.id){
+  if (!post.id) {
     const html = `
     <!DOCTYPE html>
     <html>
@@ -54,8 +58,8 @@ app.get('/posts/:id', (req,res, next) => {
     </html>
     `;
 
-    res.send(html)
-  }else{
+    res.send(html);
+  } else {
     res.send(`<!DOCTYPE html>
   <html>
   <head>
@@ -73,17 +77,17 @@ app.get('/posts/:id', (req,res, next) => {
             <small>(by ${post.name})</small>
           </p>
           <small class="news-info">
-            ${post.upvotes} upvotes | ${post.date}
+            ${post.upvotes} upvotes | ${timeAgo(post.date)}
           </small>
           <p>${post.content}</p>
         </div>
     </div>
   </body>
-</html>`)
+</html>`);
   }
-})
+});
 
-const {PORT = 1337} = process.env;
+const { PORT = 1337 } = process.env;
 app.use(morgan("dev"));
 app.use(express.static("public"));
 
