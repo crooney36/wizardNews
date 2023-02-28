@@ -1,11 +1,12 @@
 const express = require("express")
 const postBank = require("./postBank");
+const tag = require("html-template-tag");
 const timeAgo = require("node-time-ago");
 
 const postDetails = (post) => {
 
 if (!post.id) {
-  const html = `
+  const html = tag `
   <!DOCTYPE html>
   <html>
   <head>
@@ -23,7 +24,7 @@ if (!post.id) {
   return (html)
 ;
 } else {
-  const html = `<!DOCTYPE html>
+  const html = tag `<!DOCTYPE html>
 <html>
 <head>
   <title>Wizard News</title>

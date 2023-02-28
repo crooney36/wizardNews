@@ -1,9 +1,10 @@
 const express = require("express")
 const postBank = require("./postBank");
 const timeAgo = require("node-time-ago");
+const tag = require("html-template-tag");
 
 const postList = (posts) => {
-const html = `<!DOCTYPE html>
+const html = tag `<!DOCTYPE html>
 <html>
 <head>
   <title>Wizard News</title>
@@ -25,8 +26,7 @@ const html = `<!DOCTYPE html>
           ${post.upvotes} upvotes | ${timeAgo(post.date)}
         </small>
       </div>`
-      )
-      .join("")}
+      )}
   </div>
 </body>
 </html>`
